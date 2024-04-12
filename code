@@ -1,0 +1,133 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define START ios_base::sync_with_stdio(false); fin.tie(nullptr); fout.tie(nullptr);
+#define FINISH fin.close(); fout.close(); return 0;
+
+typedef unsigned long long ull;
+
+ifstream fin("numere.in");
+ofstream fout("numere.out");
+
+int main()
+{
+    START;
+
+    int cerinta;
+    ull n;
+
+    fin >> cerinta >> n;
+
+    if(cerinta == 1){
+        ull raspuns = 9;
+        n -= 3;
+
+        while(n > 0){
+            raspuns *= 5;
+            -- n;
+        }
+
+        fout << raspuns;
+        return 0;
+    }
+    else{
+        ull xmin = 163, xmax = 812;
+        int numarCifre = 0;
+
+        int cn = n;
+        while(cn){
+            ++ numarCifre;
+            cn /= 10;
+        }
+
+        numarCifre -= 3;
+        for(int i = 1; i <= numarCifre; ++ i){
+            if(i % 2 == 1){
+                xmin *= 10;
+                xmax *= 10;
+                xmax += 9;
+            }
+            else{
+                xmin *= 10;
+                ++ xmin;
+                xmax *= 10;
+                xmax += 8;
+            }
+        }
+        
+        //fout << xmin << ' ' << xmax << '\n';
+        
+        if(n < xmin){
+            fout << xmin;
+            FINISH;
+        }
+        else if(n > xmax){
+            fout << xmax;
+            FINISH;
+        }
+        else{
+            ull num1 = n, num2 = n;
+            bool numarBun = true;;
+            
+            do{
+                ++ num1;
+                ull c = num1;
+                ull num = num1;
+                numarBun = true;
+            
+                while(c > 999){
+                    c /= 10;
+                }
+            
+                if(c != 163 && c != 165 && c != 167
+                   && c != 252 && c != 363 && c != 365 && c != 367
+                    && c != 492 && c != 812){
+                        numarBun = false;
+                }
+            
+                if(numarBun){
+                    while(num > 9){
+                        if((num % 10) % 2 == ((num / 10) % 10) % 2){
+                            numarBun = false;
+                            break;
+                        }
+                        num /= 10;
+                    }
+                }
+            }while(!numarBun);
+
+            do{
+                -- num2;
+                ull c = num2;
+                ull num = num2;
+                numarBun = true;
+            
+                while(c > 999){
+                    c /= 10;
+                }
+            
+                if(c != 163 && c != 165 && c != 167
+                   && c != 252 && c != 363 && c != 365 && c != 367
+                    && c != 492 && c != 812){
+                        numarBun = false;
+                }
+                
+                if(numarBun){
+                    while(num > 9){
+                        if((num % 10) % 2 == ((num / 10) % 10) % 2){
+                            numarBun = false;
+                            break;
+                        }
+                        num /= 10;
+                    }
+                }
+            }while(!numarBun);
+            
+
+            ull ans = (num1 - n < n - num2) ? num1 : num2;
+            fout << ans;
+            FINISH;
+        }
+    }
+}
